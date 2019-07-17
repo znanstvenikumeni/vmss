@@ -1,0 +1,12 @@
+{
+	"database":{
+		"type": "mysql",
+		"host": "localhost",
+		"user": "root",
+		"password": "root",
+		"database": "vmss",
+		"charset": "utf8"
+	},
+	"env": "dev",
+	"autoExpireNoncesAfter": -1
+}
