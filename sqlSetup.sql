@@ -16,3 +16,7 @@ CREATE TABLE `nonces` (
   `used` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+create table videos ( id bigint(20) primary key auto_increment, vmssID varchar(512) unique, originalUploadFile varchar(512), data longtext, files longtext, clientKey varchar(256) ) character set = utf8mb4, auto_increment=41100; 
+
+create table queue ( id bigint(20) primary key auto_increment, vmssID varchar(512), action varchar(256), status int(3) ) character set = utf8mb4, auto_increment=99910; 

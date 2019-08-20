@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+$configurationFile = file_get_contents('.config.json');
+$config = json_decode($configurationFile);
 $vmssver = '0.0-dev';
 $vmsscliver = '0.0-dev';
 if($argc == 1){
@@ -49,7 +51,7 @@ if($argv[1] == 'about'){
 }
 if($argv[1] == 'generateSecret'){
 	$secret = bin2hex(openssl_random_pseudo_bytes(256));
-	$hash = password_hash($secret, PASSWORD_ARGON2ID);
+	$hash = password_hash($secret, $config->hash);
 	echo 'the secret key for use in your app: ';
 	echo "\n";
 	echo $secret;
