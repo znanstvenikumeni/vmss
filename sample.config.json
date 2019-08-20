@@ -1,0 +1,17 @@
+{
+    "database": {
+        "type": "mysql",
+        "host": "localhost",
+        "user": "cmzum",
+        "password": "123456",
+        "database": "vmss",
+        "charset": "utf8"
+    },
+    "env": "dev",
+    "hash": "3",
+    "autoExpireNoncesAfter": -1,
+    "urlbase": "http://vmss.local",
+    "queueKey": "6U3cy8dHLzLiEM",
+    "allowedTypes": ["webm", "mkv", "avi", "wmv", "mov", "mp4", "m4v", "mpg", "mp2", "mpeg", "mpv", "m2v", "m4v"],
+    "convertActions": ["convert/mp4/1080p", "convert/mp4/720p", "convert/mp4/480p", "convert/mp4/360p", "convert/webm/1080p", "convert/webm/720p", "convert/webm/480p", "convert/webm/360p"]
+}
