@@ -4,9 +4,7 @@ $request = substr($request, 1); // removing the first url slash to explode the a
 $routeSegments = explode("/", $request);
 
 switch ($routeSegments[0]) {
-	case 'test':
-		include 'test.php';
-	break;
+
 	case 'video':
 		echo json_encode($vmss->getVideoData($routeSegments[1]));
 	break;
