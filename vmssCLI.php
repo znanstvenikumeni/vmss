@@ -2,8 +2,8 @@
 <?php
 $configurationFile = file_get_contents('.config.json');
 $config = json_decode($configurationFile);
-$vmssver = '0.0-dev';
-$vmsscliver = '0.0-dev';
+$vmssver = '0.2-b1';
+$vmsscliver = '0.2-b1';
 if($argc == 1){
 	echo 'vmss management tools                     ';
 	echo "\n";
@@ -45,6 +45,20 @@ if($argv[1] == 'help'){
 	echo '-----';
 	echo "\n";
 	echo 'The about tool gives you info about your vmss installation, the licenses and general information about the vmss project';
+	echo 'Options: (not available)';
+	echo "\n";
+	echo '=================';
+	echo "\n";
+	echo 'queue';
+	echo "\n";
+	echo '-----';
+	echo "\n";
+	echo 'The queue tool handles *all* queue actions that haven\'t been marked as done.';
+	echo "\n";
+	echo 'All actions will execute procedurally (in other words, in a sequential fashion) until there are no more remaining tasks in the queue.';
+	echo "\n";
+	echo 'We aim to improve this tool significantly in the future. Introduced in vmss0.2-b1';
+	echo "\n";
 	echo 'Options: (not available)';
 	echo "\n";
 }
