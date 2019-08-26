@@ -17,6 +17,11 @@ if($argc == 1){
 	echo "\n";
 }
 if(!isset($argv[1])) die();
+if($argv[1] == 'queue'){
+	include 'vmss/vmss.php';
+	$vmss = new vmssCore;
+	$vmss->handleQueueAction();
+}
 if($argv[1] == 'help'){
 	echo 'vmss release '.$vmssver.' - vmsscli release '.$vmsscliver; 
 	echo "\n";

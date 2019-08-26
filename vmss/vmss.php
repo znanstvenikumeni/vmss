@@ -137,67 +137,71 @@ class vmssCore{
 	 * @return void
 	 */
 	function handleQueueAction(){
-		$sqlQuery = "SELECT * FROM queue WHERE status=0 ORDER BY id DESC LIMIT 1";
+		$sqlQuery = "SELECT * FROM queue WHERE status=0 ORDER BY id ASC";
 		$statement = $this->runDBQuery($sqlQuery);
-		try{
-			$queueRow = $statement->fetch();
-		}
-		catch(Exception $e){
-			return false;
-		}
-		$sqlQuery = "SELECT * FROM videos WHERE vmssID=:vmssID LIMIT 1";
-		$statement = $this->runDBQuery($sqlQuery, ['vmssID' => $queueRow['vmssID']]);
-		$videoRow = $statement->fetch();
-		$action = $queueRow['action'];
-		$action = explode('/', $action);
-		$resolution = $action[2];
-		$format = $action[1];
-		switch($resolution){
-			case '1080p':
-				$Dimension = '1920:1080';
-			break;
-			case '720p':
-				$Dimension = '960:720';
-			break;
-			case '480p':
-				$Dimension = '854:480';
-			break;
-			case '360p':
-				$Dimension = '640:360';
-			break;
-		}
+		$queue = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-		switch($format){
-			case 'mp4':
-				$command = 'ffmpeg -y -i {input} -vf scale={dimension} -async 1 -metadata:s:v:0 start_time=0 -c:v libx264 -preset fast -c:a aac {output} -hide_banner'; 
-				$exportExt = '.mp4';
-			break;
-			case 'webm':
-				$command = 'ffmpeg -y -i {input} -vf scale={dimension} -async 1 -metadata:s:v:0 start_time=0 -f webm -c:v libvpx -b:v 1M -acodec libvorbis {output} -hide_banner';
-				$exportExt = '.webm';
-			break;
+		foreach($queue as $queueRow){
+			$sqlQuery = "SELECT * FROM videos WHERE vmssID=:vmssID LIMIT 1";
+			$statement = $this->runDBQuery($sqlQuery, ['vmssID' => $queueRow['vmssID']]);
+			$videoRow = $statement->fetch();
+			$action = $queueRow['action'];
+			$action = explode('/', $action);
+			$resolution = $action[2];
+			$format = $action[1];
+			switch($resolution){
+				case '1080p':
+					$Dimension = '1920:1080';
+				break;
+				case '720p':
+					$Dimension = '960:720';
+				break;
+				case '480p':
+					$Dimension = '854:480';
+				break;
+				case '360p':
+					$Dimension = '640:360';
+				break;
+			}
+
+			switch($format){
+				case 'mp4':
+					$command = 'ffmpeg -y -i {input} -vf scale={dimension} -async 1 -metadata:s:v:0 start_time=0 -c:v libx264 -preset fast -c:a aac {output} -hide_banner'; 
+					$exportExt = '.mp4';
+				break;
+				case 'webm':
+					$command = 'ffmpeg -y -i {input} -vf scale={dimension} -async 1 -metadata:s:v:0 start_time=0 -f webm -c:v libvpx -b:v 1M -acodec libvorbis {output} -hide_banner';
+					$exportExt = '.webm';
+				break;
+			}
+			$format = $action[1];
+			
+			$videosAvailable = $videoRow['files'];
+			if($videosAvailable){
+				$videosAvailable = json_decode($videosAvailable, true);
+			}
+			$videosAvailable[$format][$resolution] = 'uploads/'.$videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
+			$fileName = $videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
+			$videosAvailable = json_encode($videosAvailable);
+			
+			$input = 'uploads/'.$videoRow['originalUploadFile'];
+			$output = 'uploads/'.$videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
+			$command = str_replace('{input}', $input, $command);
+			$command = str_replace('{output}', $output, $command);
+			$command = str_replace('{dimension}', $Dimension, $command);
+			$url = $this->readConfig()->urlbase.'/markAsDone/'.$queueRow['id'].'/'.$fileName.'/'.$videoRow['vmssID'].'/'.$format.'/'.$resolution.'/'.$this->readConfig()->queueKey; 
+			$curl = 'curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET \''.$url.'\'';
+			$command = $command;
+			$sqlQuery = "UPDATE queue SET status=1 WHERE id=:id";
+			$statement = $this->runDBQuery($sqlQuery, ['id' => $queueRow['id']]);
+			$output = '';
+			$return = '';
+			exec($command, $output, $return);
+			if($return == 0){
+				$this->popFromQueue($queueRow['id'], $fileName, $videoRow['vmssID'], $format, $resolution);
+			}
+
 		}
-		$format = $action[1];
-		
-		$videosAvailable = $videoRow['files'];
-		if($videosAvailable){
-			$videosAvailable = json_decode($videosAvailable, true);
-		}
-		$videosAvailable[$format][$resolution] = 'uploads/'.$videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
-		$fileName = $videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
-		$videosAvailable = json_encode($videosAvailable);
-		
-		$input = 'uploads/'.$videoRow['originalUploadFile'];
-		$output = 'uploads/'.$videoRow['vmssID'].'_'.$format.'_'.$resolution.$exportExt;
-		$command = str_replace('{input}', $input, $command);
-		$command = str_replace('{output}', $output, $command);
-		$command = str_replace('{dimension}', $Dimension, $command);
-		$url = $this->readConfig()->urlbase.'/markAsDone/'.$queueRow['id'].'/'.$fileName.'/'.$videoRow['vmssID'].'/'.$format.'/'.$resolution.'/'.$this->readConfig()->queueKey; 
-		$curl = 'curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET \''.$url.'\'';
-		$command = $command. ' && '.$curl;
-		$sqlQuery = "UPDATE queue SET status=1 WHERE id=:id";
-		$statement = $this->runDBQuery($sqlQuery, ['id' => $queueRow['id']]);
-		exec($command);
 	}
 
 
