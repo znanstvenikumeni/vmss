@@ -247,4 +247,32 @@ class vmssCore{
 		return $publicData;
 
 	}
+
+	function generateThumbnail($vmssID){
+		echo 'regenerating thumb for '.$vmssID;
+		$sqlQuery = "SELECT * FROM videos WHERE vmssID=:vmssID LIMIT 1";
+		$statement = $this->runDBQuery($sqlQuery, ['vmssID' => $vmssID]);
+		$videoRow = $statement->fetch();
+		$command = "ffmpeg -i {input} -vframes 1 -ss 0:00:10.0 {output}";
+		$input = 'uploads/'.$videoRow['originalUploadFile'];
+		$output = 'uploads/'.$videoRow['vmssID'].'_thumb'.'.jpg';
+		$command = str_replace('{input}', $input, $command);
+		$command = str_replace('{output}', $output, $command);
+		$data['thumb'] = $output;
+		exec($command, $outputArray, $return);
+		var_dump($data);
+		$dataJson = json_encode($data);
+		$sqlQuery = "UPDATE videos SET data=:dataJson WHERE vmssID=:vmssID";
+		$statement = $this->runDBQuery($sqlQuery, ['dataJson' => $dataJson, 'vmssID' => $vmssID]);
+
+	}
+	function regenerateThumbnails(){
+		$sqlQuery = "SELECT vmssID FROM videos";
+		$statement = $this->runDBQuery($sqlQuery, ['vmssID' => $vmssID]);
+		$video = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($video as $row){
+			$this->generateThumbnail($row['vmssID']);
+		}
+	}
 }

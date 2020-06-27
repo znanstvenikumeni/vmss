@@ -14,6 +14,11 @@ switch ($routeSegments[0]) {
 		}
 		$vmss->handleQueueAction();
 	break;
+	case 'regenerateThumbs':
+		if($routeSegments[1] !== $vmss->readConfig()->queueKey) die();
+		$vmss->regenerateThumbnails();
+	break;
+	break;
 	case 'markAsDone':
 		if($routeSegments[6] !== $vmss->readConfig()->queueKey){
 			die();
