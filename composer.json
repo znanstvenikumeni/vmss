@@ -1,0 +1,18 @@
+{
+    "name": "znanstvenikumeni/vmss",
+    "description": "Video management and streaming services",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TFKi IT and Data Science",
+            "email": "natjecanje@znanstvenikumeni.org"
+        }
+    ],
+    "require": {
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {"vmss\\": "src/"}
+    }
+}
