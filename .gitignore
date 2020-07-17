@@ -2,4 +2,5 @@ vendor/
 composer.lock
 secret.txt
 uploads/
-
+.config.json
+.idea
