@@ -10,7 +10,9 @@
         }
     ],
     "require": {
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-openssl": "*",
+        "symfony/console": "^5.1"
     },
     "autoload": {
         "psr-4": {"vmss\\": "src/"}

@@ -6,9 +6,9 @@ namespace vmss\Server;
 
 class Config
 {
-    private $ConfigFilePath = __DIR__.'../../.config.json';
+    private $ConfigFilePath = __DIR__.'/../../.config.json';
     private $Config;
-    public function __construct($ConfigFilePath = $this->ConfigFilePath)
+    public function __construct($ConfigFilePath = __DIR__.'/../../.config.json')
     {
         $this->ConfigFilePath = $ConfigFilePath;
         $ConfigFile = file_get_contents($this->ConfigFilePath);

@@ -25,7 +25,8 @@ class PDOConnection implements DatabaseConnection
         return $this->PDO;
     }
     private function PDOConstructor(){
-        $PDO = new \PDO($this->host.':dbname='.$this->database.';host='.$this->host);
+        $dsn = $this->type.':dbname='.$this->database.';host='.$this->host;
+        $PDO = new \PDO($dsn, $this->user, $this->password);
         $this->PDO = $PDO;
     }
 

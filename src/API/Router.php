@@ -8,7 +8,7 @@ class Router
 {
     private $Endpoint;
     private $Method;
-    private $RequestRoutes;
+    public $RequestRoutes;
     private $Routes;
     public function __construct(){
         $this->Routes = [];
@@ -18,9 +18,15 @@ class Router
         $this->Endpoint = $Endpoint ?? '/';
         if(!$this->Endpoint) $this->Endpoint = '/';
         $this->RequestRoutes = $RequestRoutes;
+        $Found = false;
         foreach($this->Routes as $Route){
-
-            if($Route->getMethod() == $this->Method && $this->Endpoint == $Route->getEndpoint()) $Route->execute();
+            if($Route->getMethod() == $this->Method && $this->Endpoint == $Route->getEndpoint()){
+                $Route->execute();
+                $Found = true;
+            }
+        }
+        if(!$Found) {
+            /** execute 404 **/
         }
     }
     public function addRoute(\vmss\API\Route $Route){

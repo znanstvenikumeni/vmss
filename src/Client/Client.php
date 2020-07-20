@@ -27,4 +27,5 @@ class Client
         $Config = new Config();
         $this->privateKeyHash = password_hash($key, $Config->privateKeyAlgorithm);
     }
+
 }
