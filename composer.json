@@ -2,7 +2,7 @@
     "name": "znanstvenikumeni/vmss",
     "description": "Video management and streaming services",
     "type": "project",
-    "license": "MIT",
+    "license": "MPL-2.0",
     "authors": [
         {
             "name": "TFKi IT and Data Science",
