@@ -39,7 +39,6 @@ class ClientManager
     public function searchByPublicKey($publicKey){
         $PDOFactory = new \vmss\Server\PDOConnectionFactory();
         $PDO = $PDOFactory->connect();
-        $PDO->setAttribute(\PDO::ATTR_EMULATE_PREPARES,false);
         $SQLQuery = "SELECT * FROM allowedClients WHERE publicKey = :publicKey";
         $Params['publicKey'] = $publicKey;
         $Statement = $PDO->prepare($SQLQuery);

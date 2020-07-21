@@ -26,7 +26,7 @@ class Router
             }
         }
         if(!$Found) {
-            /** execute 404 **/
+            header('Location: /404');
         }
     }
     public function addRoute(\vmss\API\Route $Route){
