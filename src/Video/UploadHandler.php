@@ -27,10 +27,11 @@ class UploadHandler
         $file_name = bin2hex(openssl_random_pseudo_bytes($Config->randomStringLength)).md5($file_name);
         $Destination = __DIR__.'/../../'.$Config->uploadFolder;
         if(move_uploaded_file($file_path, $Destination . basename($file_name))){
-            $vmssID = bin2hex(openssl_random_pseudo_bytes(64));
-            //$vmss->saveFile($vmssID, $file_name, $routeSegments[1]);
+            $VideoObject = new vmssVideoObject();
+            $VideoObject->originalUploadFile = $file_name;
+            $VideoObject->new();
             $response['upload'] = 'success';
-            $response['id'] = $vmssID;
+            $response['id'] = $VideoObject->vmssID;
             return json_encode($response);
         }
         else{

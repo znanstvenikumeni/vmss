@@ -37,3 +37,9 @@ $Router->addRoute(new \vmss\API\Route('GET', 'test', function(){
     $Config = new \vmss\Server\Config();
     if($Config->env == 'dev') include __DIR__.'/../../docs/ImplementationSample.php';
 }));
+$Router->addRoute(new \vmss\API\Route('GET', 'video', function(){
+    $Video = new \vmss\Video\vmssVideoObject();
+    $Video->vmssID = $this->RouteRequest->Routes[1];
+    $Video->fetch();
+    echo (string)$Video;
+}));
