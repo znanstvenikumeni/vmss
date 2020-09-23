@@ -62,7 +62,7 @@ switch ($routeSegments[0]) {
 			$fileExtension = $fileNaming[array_key_last($fileNaming)];
 			$config = $vmss->readConfig();
 			$allowedExtensions = (array)$config->allowedTypes;
-			if(!in_array($fileExtension, $allowedExtensions)){
+			if(!in_array(strtolower($fileExtension), $allowedExtensions)){
 				http_response_code(400);
 				$vmss->handleError('Filetype not allowed');
 			}
